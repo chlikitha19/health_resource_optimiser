@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hospital Resource Optimizer</title>
+
+<style>
+
+body { font-family: Arial; margin:0; background:#f4f7fb; }
+
+header { background:#0d6efd; color:white; padding:15px; text-align:center; }
+
+nav { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; background:#023e8a; padding:10px; }
+
+nav button { background:white; border:none; padding:8px 12px; cursor:pointer; border-radius:5px; }
+
+section { display:none; padding:20px; }
+
+.active { display:block; }
+
+.card { background:white; padding:15px; margin:10px 0; border-radius:8px; box-shadow:0 0 5px rgba(0,0,0,0.1);} 
+
+input, select { padding:8px; margin:5px 0; width:100%; }
+
+button.submit { background:#0d6efd; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer; }
+
+footer { background:#0d6efd; color:white; padding:20px; text-align:center; }
+
+.progress { height:10px; background:#ddd; border-radius:5px; overflow:hidden; }
+
+.progress-bar { height:100%; background:#0d6efd; width:50%; }
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>MedCare Hospital</h1>
+
+<p>Hospital Resource Optimizer System</p>
+
+</header>
+
+<nav>
+
+<button onclick="showSection('login')">Login</button>
+
+<button onclick="showSection('appointment')">Appointment</button>
+
+<button onclick="showSection('emergency')">Emergency</button>
+
+<button onclick="showSection('payment')">Payment</button>
+
+<button onclick="showSection('food')">Food</button>
+
+<button onclick="showSection('medicine')">Medicine</button>
+
+<button onclick="showSection('availability')">Beds</button>
+
+<button onclick="showSection('doctors')">Doctors</button>
+
+<button onclick="showSection('timings')">Timings</button>
+
+</nav>
+
+<!-- Login -->
+
+<section id="login" class="active">
+
+<h2>Login / Sign Up</h2>
+
+<div class="card">
+
+<input type="text" id="username" placeholder="Username">
+
+<input type="password" id="password" placeholder="Password">
+
+<button class="submit" onclick="login()">Login</button>
+
+<button class="submit" onclick="signup()">Sign Up</button>
+
+<p id="loginMsg"></p>
+
+</div>
+
+</section>
+
+<!-- Appointment -->
+
+<section id="appointment">
+
+<h2>Book Appointment</h2>
+
+<div class="card">
+
+<input type="text" id="patientName" placeholder="Patient Name">
+
+<input type="date" id="date">
+
+<select id="doctorSelect" onchange="updateDoctorInfo()">
+
+<option value="">Select Doctor</option>
+
+<option value="Cardiologist">Dr. Sharma - Cardiologist</option>
+
+<option value="Neurologist">Dr. Rao - Neurologist</option>
+
+<option value="Pediatrician">Dr. Mehta - Pediatrician</option>
+
+</select>
+
+<p id="doctorInfo"></p>
+
+<button class="submit" onclick="bookAppointment()">Book</button>
+
+<p id="appointmentMsg"></p>
+
+</div>
+
+</section>
+
+<!-- Emergency -->
+
+<section id="emergency">
+
+<h2>Emergency Services</h2>
+
+<div class="card">
+
+<p>24/7 Emergency Available</p>
+
+<a href="tel:108"><button class="submit">Call Emergency (108)</button></a>
+
+<p id="emergencyMsg"></p>
+
+</div>
+
+</section>
+
+<!-- Payment -->
+
+<section id="payment">
+
+<h2>Hospital Payment</h2>
+
+<div class="card">
+
+<input type="text" id="payer" placeholder="Patient Name">
+
+<input type="number" id="amount" placeholder="Enter Amount">
+
+<select id="method">
+
+<option>UPI</option>
+
+<option>Credit Card</option>
+
+<option>Debit Card</option>
+
+<option>Cash</option>
+
+</select>
+
+<button class="submit" onclick="makePayment()">Pay Now</button>
+
+<p id="paymentMsg"></p>
+
+</div>
+
+</section>
+
+<!-- Food Delivery -->
+
+<section id="food">
+
+<h2>Food Delivery</h2>
+
+<div class="card">
+
+<input type="text" id="foodItem" placeholder="Enter Food Item">
+
+<button class="submit" onclick="orderFood()">Order Food</button>
+
+<p id="foodMsg"></p>
+
+</div>
+
+</section>
+
+<!-- Medicine Delivery -->
+
+<section id="medicine">
+
+<h2>Medicine Delivery</h2>
+
+<div class="card">
+
+<input type="text" id="medicineItem" placeholder="Enter Medicine">
+
+<button class="submit" onclick="orderMedicine()">Order Medicine</button>
+
+<p id="medicineMsg"></p>
+
+</div>
+
+</section>
+
+<!-- Availability -->
+
+<section id="availability">
+
+<h2>Patient Bed Availability (Auto Updates Every Hour)</h2>
+
+<div class="card">
+
+<p>General Ward</p>
+
+<div class="progress"><div id="bar1" class="progress-bar"></div></div>
+
+<p id="bed1"></p>
+
+<p>ICU</p>
+
+<div class="progress"><div id="bar2" class="progress-bar"></div></div>
+
+<p id="bed2"></p>
+
+<button class="submit" onclick="updateBeds()">Manual Refresh</button>
+
+</div>
+
+</section>
+
+<!-- Doctors -->
+
+<section id="doctors">
+
+<h2>Doctors & Specializations</h2>
+
+<div class="card">
+
+<ul>
+
+<li>Dr. Sharma - Cardiologist</li>
+
+<li>Dr. Rao - Neurologist</li>
+
+<li>Dr. Mehta - Pediatrician</li>
+
+<li>Dr. Khan - Orthopedic</li>
+
+<li>Dr. Reddy - General Physician</li>
+
+</ul>
+
+</div>
+
+</section>
+
+<!-- Timings -->
+
+<section id="timings">
+
+<h2>Hospital Timings</h2>
+
+<div class="card">
+
+<p>Emergency: 24/7</p>
+
+<p>OPD: 8 AM - 6 PM</p>
+
+<p>Pharmacy: 7 AM - 10 PM</p>
+
+<p>Lab: 7 AM - 8 PM</p>
+
+<p>Cafeteria: 6 AM - 9 PM</p>
+
+</div>
+
+</section>
+
+<footer>
+
+<p>© 2026 MedCare Hospital | All Rights Reserved</p>
+
+</footer>
+
+<script>
+
+function showSection(id) {
+
+  document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+
+  document.getElementById(id).classList.add("active");
+
+}
+
+function login() {
+
+  document.getElementById("loginMsg").innerText = "Login successful (demo)";
+
+}
+
+function signup() {
+
+  document.getElementById("loginMsg").innerText = "Account created (demo)";
+
+}
+
+function updateDoctorInfo() {
+
+  let doc = document.getElementById("doctorSelect").value;
+
+  document.getElementById("doctorInfo").innerText = doc ? "Specialist: " + doc : "";
+
+}
+
+function bookAppointment() {
+
+  let name = document.getElementById("patientName").value;
+
+  let doc = document.getElementById("doctorSelect").value;
+
+  if(name && doc) {
+
+    document.getElementById("appointmentMsg").innerText = "Appointment booked with " + doc;
+
+  }
+
+}
+
+function makePayment() {
+
+  let amt = document.getElementById("amount").value;
+
+  if(amt) document.getElementById("paymentMsg").innerText = "Payment of ₹" + amt + " successful";
+
+}
+
+function orderFood() {
+
+  let item = document.getElementById("foodItem").value;
+
+  if(item) document.getElementById("foodMsg").innerText = item + " food ordered";
+
+}
+
+function orderMedicine() {
+
+  let item = document.getElementById("medicineItem").value;
+
+  if(item) document.getElementById("medicineMsg").innerText = item + " medicine ordered";
+
+}
+
+function updateBeds() {
+
+  let g = Math.floor(Math.random()*100);
+
+  let i = Math.floor(Math.random()*20);
+
+  document.getElementById("bed1").innerText = g + " beds available";
+
+  document.getElementById("bed2").innerText = i + " ICU beds available";
+
+  document.getElementById("bar1").style.width = g + "%";
+
+  document.getElementById("bar2").style.width = i*5 + "%";
+
+}
+
+// Auto update every hour (demo: 10 seconds)
+
+setInterval(updateBeds, 10000);
+
+updateBeds();
+
+</script>
+
+</body>
+
+</html>
